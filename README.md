@@ -1,1 +1,1 @@
-# pool-heating
+# Solar Pool Heating Controller
