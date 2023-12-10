@@ -1,4 +1,4 @@
-#include <Arduino.h> 
+#include <Arduino.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
@@ -17,11 +17,12 @@ const int LED2 = 27;
 bool led1State = false;
 bool led2State = false;
 
-void sendHtml() {
-  String response = R"(
+void sendHtml()
+{
+    String response = R"(
     <!DOCTYPE html><html>
       <head>
-        <title>ESP32 Web Server Demo</title>
+        <title>Pedroca!</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
           html { font-family: sans-serif; text-align: center; }
@@ -36,43 +37,46 @@ void sendHtml() {
       </head>
             
       <body>
-        <h1>ESP32 Web Server</h1>
+        <h1>ESP32 do xxxx</h1>
 
         <div>
-          <h2>LED 1</h2>
+          <h2>LED AZUL</h2>
           <a href="/toggle/1" class="btn LED1_TEXT">LED1_TEXT</a>
-          <h2>LED 2</h2>
+          <h2>LED VERDE</h2>
           <a href="/toggle/2" class="btn LED2_TEXT">LED2_TEXT</a>
         </div>
       </body>
     </html>
   )";
-  response.replace("LED1_TEXT", led1State ? "ON" : "OFF");
-  response.replace("LED2_TEXT", led2State ? "ON" : "OFF");
-  server.send(200, "text/html", response);
+    response.replace("LED1_TEXT", led1State ? "ON" : "OFF");
+    response.replace("LED2_TEXT", led2State ? "ON" : "OFF");
+    server.send(200, "text/html", response);
 }
 
-void setup(void) {
-  Serial.begin(115200);
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
+void setup(void)
+{
+    Serial.begin(115200);
+    pinMode(LED1, OUTPUT);
+    pinMode(LED2, OUTPUT);
 
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD, WIFI_CHANNEL);
-  Serial.print("Connecting to WiFi ");
-  Serial.print(WIFI_SSID);
-  // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
-    Serial.print(".");
-  }
-  Serial.println(" Connected!");
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD, WIFI_CHANNEL);
+    Serial.print("Connecting to WiFi ");
+    Serial.print(WIFI_SSID);
+    // Wait for connection
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(100);
+        Serial.print(".");
+    }
+    Serial.println(" Connected!");
 
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
 
-  server.on("/", sendHtml);
+    server.on("/", sendHtml);
 
-  server.on(UriBraces("/toggle/{}"), []() {
+    server.on(UriBraces("/toggle/{}"), []()
+              {
     String led = server.pathArg(0);
     Serial.print("Toggle LED #");
     Serial.println(led);
@@ -88,14 +92,14 @@ void setup(void) {
         break;
     }
 
-    sendHtml();
-  });
+    sendHtml(); });
 
-  server.begin();
-  Serial.println("HTTP server started (http://localhost:8180)");
+    server.begin();
+    Serial.println("HTTP server started (http://localhost:5500)");
 }
 
-void loop(void) {
-  server.handleClient();
-  delay(2);
+void loop(void)
+{
+    server.handleClient();
+    delay(2);
 }
