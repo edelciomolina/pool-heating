@@ -19,6 +19,28 @@
       "top": 68.96,
       "left": -127.84,
       "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-ntc-temperature-sensor",
+      "id": "ntc1",
+      "top": -83.8,
+      "left": -327,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-ntc-temperature-sensor",
+      "id": "ntc2",
+      "top": 2.6,
+      "left": -327,
+      "attrs": {}
+    },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 3.72, "left": 182.23, "attrs": {} },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr1",
+      "top": 195.2,
+      "left": -373.6,
+      "attrs": {}
     }
   ],
   "connections": [
@@ -30,5 +52,6 @@
     [ "esp:GND.2", "led1:C", "black", [ "h0" ] ],
     [ "esp:D26", "r1:2", "green", [ "h0" ] ],
     [ "r2:2", "esp:D27", "green", [ "v0" ] ]
-  ]
+  ],
+  "dependencies": {}
 }
