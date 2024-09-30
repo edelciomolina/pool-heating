@@ -7,12 +7,13 @@
 #include <ESPAsyncTCP.h>
 #endif
 #include <ESPAsyncWebServer.h>
-#include "test.h" 
+#include "test.h"
 #include "html.h"
 
 AsyncWebServer server(80);
 
 HTML html;
+const int LED_BUILTIN = 2;
 const int LED1 = 26;
 const int LED2 = 27;
 
@@ -22,9 +23,9 @@ bool led2State = false;
 // Note: Wokwi uses a special WiFi network called Wokwi-GUEST (no password).
 // This virtual network provides internet access to the simulated ESP32.
 // To learn more: https://docs.wokwi.com/guides/esp32-wifi#connecting-to-the-wifi
-const char *ssid = "Wokwi-GUEST";
-const char *password = "";
-const int WIFI_CHANNEL = 6; // Speeds up the connection in Wokwi
+const char *ssid = "Molina_Sala"; // Wokwi-GUEST
+const char *password = "erm55555";
+// const int WIFI_CHANNEL = 6; // Speeds up the connection in Wokwi
 
 const char *PARAM_MESSAGE = "message";
 
@@ -41,6 +42,17 @@ String createHtml()
     return response;
 }
 
+void piscarLED(int vezes, int intervalo)
+{
+    for (int i = 0; i < vezes; i++)
+    {
+        Serial.print("[blink]");
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(intervalo);
+        digitalWrite(LED_BUILTIN, LOW); // Espera um intervalo
+    }
+}
+
 void setup()
 {
 
@@ -50,15 +62,20 @@ void setup()
 
     imprimirMensagem();
 
+    piscarLED(3, 500);
     Serial.print("Connecting to WiFi... ");
     WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password, WIFI_CHANNEL);
+    // WiFi.begin(ssid, password, WIFI_CHANNEL);
+    WiFi.begin(ssid, password);
     if (WiFi.waitForConnectResult() != WL_CONNECTED)
     {
         Serial.printf("WiFi Failed!\n");
         return;
     }
     Serial.println(" Connected!");
+    piscarLED(5, 500);
+
+    WiFi.setHostname("POOL");
 
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());

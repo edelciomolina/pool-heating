@@ -2,6 +2,7 @@
 #define HTML_H
 
 #include <Arduino.h>
+#include <HTTPClient.h>
 
 class HTML
 {
@@ -57,6 +58,39 @@ public:
         </html>
     )";
     }
+
+    // String readFile(const char *url)
+    // {
+    //     WiFi.begin(ssid, password);
+    //     while (WiFi.status() != WL_CONNECTED)
+    //     {
+    //         delay(1000);
+    //         Serial.println("Connecting to WiFi...");
+    //     }
+    //     Serial.println("Connected to WiFi");
+
+    //     String content;
+
+    //     if (WiFi.status() == WL_CONNECTED)
+    //     {
+    //         HTTPClient http;
+    //         http.begin(url);
+
+    //         int httpCode = http.GET();
+    //         if (httpCode == HTTP_CODE_OK)
+    //         {
+    //             content = http.getString();
+    //         }
+    //         else
+    //         {
+    //             Serial.println("Failed to fetch the web page content");
+    //         }
+
+    //         http.end();
+    //     }
+
+    //     return content;
+    // }
 };
 
 #endif

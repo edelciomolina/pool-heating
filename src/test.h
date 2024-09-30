@@ -6,7 +6,7 @@
 
 void imprimirMensagem()
 {
-    Serial.println("😛 Esta é uma mensagem da função personalizada! Xzz");
+    Serial.println("😛 Esta é uma mensagem da função personalizada!");
 }
 
 #endif
