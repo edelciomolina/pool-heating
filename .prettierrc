@@ -2,8 +2,13 @@
   "tabWidth": 4,
   "useTabs": false,
   "semi": true,
-  "singleQuote": true,
-  "trailingComma": "all",
+  "singleQuote": false,  
+  "trailingComma": "none",  
   "bracketSpacing": true,
-  "arrowParens": "always"
+  "arrowParens": "avoid" ,
+  "printWidth": 100,  
+  "quoteProps": "as-needed",  
+  "insertPragma": false,  
+  "requirePragma": false,  
+  "endOfLine": "lf"  
 }
