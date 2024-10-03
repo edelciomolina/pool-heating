@@ -10,13 +10,14 @@ void setupFirebase(const String& databaseURL, const String& apiKey) {
     firebaseApiKey = apiKey;
 }
 
-void sendTemperatureToFirebase(float temp1, float temp2) {
+void sendTemperatureToFirebase(float temp1, float temp2, const String& timestamp) {
     if (WiFi.status() == WL_CONNECTED) {
         HTTPClient http;
         String url = firebaseDatabaseURL + "/temperatures.json?auth=" + firebaseApiKey;
 
         // Preparar os dados JSON
         String jsonData = "{";
+        jsonData += "\"timestamp\": \"" + timestamp + "\",";
         jsonData += "\"sensor1\": " + String(temp1) + ",";
         jsonData += "\"sensor2\": " + String(temp2);
         jsonData += "}";

@@ -3,7 +3,13 @@
 #include "relay_motor.h"
 #include "wifi_manager.h"
 #include "firebase.h"
-#include "firebase_config.h" // Inclui o arquivo com a chave da API
+#include "firebase_config.h"
+#include <WiFiUdp.h>
+#include <NTPClient.h>
+
+// Configuração do NTP
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", -3 * 3600); // Ajuste o fuso horário (-3h para o Brasil)
 
 void setup()
 {
@@ -13,7 +19,11 @@ void setup()
     setupRelay();    // Configura o relé para controlar o motor
     connectToWiFi(); // Conecta ao WiFi
 
-    // Configuração do Firebase
+    // Inicializa o cliente NTP para obter data e hora
+    timeClient.begin();
+    timeClient.update();
+
+    // Configuração do Firebase usando a chave da API do firebase_config.h
     String firebaseDatabaseURL = "https://pool-heating-default-rtdb.firebaseio.com";
     setupFirebase(firebaseDatabaseURL, FIREBASE_API_KEY); // Use a chave da API do arquivo firebase_config.h
 }
@@ -29,8 +39,12 @@ void loop()
     Serial.print("Temperatura do sensor 2: ");
     Serial.println(temp2);
 
-    // Enviar dados para o Firebase
-    sendTemperatureToFirebase(temp1, temp2);
+    // Atualiza a data e a hora
+    timeClient.update();
+    String timestamp = timeClient.getFormattedTime();
+
+    // Enviar dados para o Firebase (inclui temperatura e hora atual)
+    sendTemperatureToFirebase(temp1, temp2, timestamp);
 
     // Controle do motor com base na temperatura
     if (temp1 > 30.0 || temp2 > 30.0)

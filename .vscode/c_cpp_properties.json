@@ -9,6 +9,9 @@
             "name": "PlatformIO",
             "includePath": [
                 "e:/_Projetos/pool-heating/src",
+                "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src",
+                "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
+                "e:/_Projetos/pool-heating/.pio/libdeps/esp32/NTPClient",
                 "e:/_Projetos/pool-heating/.pio/libdeps/esp32/DallasTemperature",
                 "e:/_Projetos/pool-heating/.pio/libdeps/esp32/OneWire",
                 "e:/_Projetos/pool-heating/.pio/libdeps/esp32/ESP Async WebServer/src",
@@ -223,7 +226,6 @@
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/ESPmDNS/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Ethernet/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/FFat/src",
-                "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPUpdate/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPUpdateServer/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/I2S/src",
@@ -241,7 +243,6 @@
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/USB/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
-                "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 ""
@@ -250,6 +251,9 @@
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
                     "e:/_Projetos/pool-heating/src",
+                    "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src",
+                    "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
+                    "e:/_Projetos/pool-heating/.pio/libdeps/esp32/NTPClient",
                     "e:/_Projetos/pool-heating/.pio/libdeps/esp32/DallasTemperature",
                     "e:/_Projetos/pool-heating/.pio/libdeps/esp32/OneWire",
                     "e:/_Projetos/pool-heating/.pio/libdeps/esp32/ESP Async WebServer/src",
@@ -464,7 +468,6 @@
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/ESPmDNS/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Ethernet/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/FFat/src",
-                    "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPUpdate/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPUpdateServer/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/I2S/src",
@@ -482,7 +485,6 @@
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/USB/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
-                    "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     ""
