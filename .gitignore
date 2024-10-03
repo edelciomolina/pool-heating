@@ -1,2 +1,3 @@
 build
-.pio
+.pio 
+firebase_config.h
