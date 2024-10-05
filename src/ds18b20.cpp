@@ -1,4 +1,6 @@
 #include "ds18b20.h"
+#include "log.h"
+#include "controller.h"
 
 // Definindo as portas dos sensores
 #define ONE_WIRE_BUS_1 22
@@ -7,26 +9,44 @@
 OneWire oneWire1(ONE_WIRE_BUS_1);
 OneWire oneWire2(ONE_WIRE_BUS_2);
 
-DallasTemperature sensor1(&oneWire1);
-DallasTemperature sensor2(&oneWire2);
+DallasTemperature poolSensor(&oneWire1);
+DallasTemperature roofSensor(&oneWire2);
 
 void setupDS18B20()
 {
-    sensor1.begin();
-    sensor2.begin();
+    logMessage("DS18B20", "Starting...");
+    poolSensor.begin();
+    roofSensor.begin();
 }
 
-float getTemperature(int sensorNumber)
+float getPoolTemperature()
 {
-    if (sensorNumber == 1)
+    poolSensor.requestTemperatures();
+    return poolSensor.getTempCByIndex(0);
+}
+
+float getRoofTemperature()
+{
+    roofSensor.requestTemperatures();
+    return roofSensor.getTempCByIndex(0);
+}
+
+void checkTemperature()
+{
+
+    float poolTemperature = getPoolTemperature();
+    float roofTemperature = getRoofTemperature();
+
+    logMessage("POOL", String(poolTemperature));
+    logMessage("ROOF", String(roofTemperature));
+
+    // Controle do motor com base na temperatura
+    if (roofTemperature > 30.0 || poolTemperature > 30.0)
     {
-        sensor1.requestTemperatures();
-        return sensor1.getTempCByIndex(0);
+        motor(HIGH);
     }
-    else if (sensorNumber == 2)
+    else
     {
-        sensor2.requestTemperatures();
-        return sensor2.getTempCByIndex(0);
+        motor(LOW);
     }
-    return -127.0; // Retorna um valor de erro se o sensor não for válido
 }

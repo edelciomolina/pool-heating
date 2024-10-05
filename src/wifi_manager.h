@@ -1,6 +1,14 @@
-#ifndef WIFI_MANAGER_H
-#define WIFI_MANAGER_H
+#ifndef wifi_H
+#define wifi_H
+#include <Arduino.h>
+#include <wifi.h>
+#include <WiFiUdp.h>
+#include <NTPClient.h>
 
+void setupWiFi();
 void connectToWiFi();
+int checkInternetConnection();
+extern String ipAddress;
+String now();
 
-#endif // WIFI_MANAGER_H
+#endif // wifi_H

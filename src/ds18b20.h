@@ -6,6 +6,8 @@
 #include <DallasTemperature.h>
 
 void setupDS18B20();
-float getTemperature(int sensorNumber);
+void checkTemperature();
+float getPoolTemperature();
+float getRoofTemperature();
 
 #endif // DS18B20_H

@@ -1,25 +1,30 @@
 #include "firebase.h"
-#include <WiFi.h>
-#include <HTTPClient.h>
+#include "log.h"
+#include "ds18b20.h"
+#include "controller.h"
+#include "wifi_manager.h"
+#include "firebase_config.h"
 
-String firebaseDatabaseURL;
-String firebaseApiKey;
+String firebaseDatabaseURL = "https://pool-heating-default-rtdb.firebaseio.com";
 
-void setupFirebase(const String& databaseURL, const String& apiKey) {
-    firebaseDatabaseURL = databaseURL;
-    firebaseApiKey = apiKey;
+void setupFirebase()
+{
+    logMessage("Firebase", "Starting...");
 }
 
-void sendTemperatureToFirebase(float temp1, float temp2, const String& timestamp) {
-    if (WiFi.status() == WL_CONNECTED) {
+void updateHistory(int stateMotor, float poolTemperature, float roofTemperature, const String &timestamp)
+{
+    if (checkInternetConnection() == WL_CONNECTED)
+    {
         HTTPClient http;
-        String url = firebaseDatabaseURL + "/temperatures.json?auth=" + firebaseApiKey;
+        String url = firebaseDatabaseURL + "/history.json?auth=" + FIREBASE_API_KEY;
 
         // Preparar os dados JSON
         String jsonData = "{";
         jsonData += "\"timestamp\": \"" + timestamp + "\",";
-        jsonData += "\"sensor1\": " + String(temp1) + ",";
-        jsonData += "\"sensor2\": " + String(temp2);
+        jsonData += "\"motor\": " + String(stateMotor) + ",";
+        jsonData += "\"pool\": " + String(poolTemperature) + ",";
+        jsonData += "\"roof\": " + String(roofTemperature);
         jsonData += "}";
 
         // Configura a conexão HTTP e envia a requisição POST
@@ -28,16 +33,32 @@ void sendTemperatureToFirebase(float temp1, float temp2, const String& timestamp
 
         int httpResponseCode = http.POST(jsonData);
 
-        if (httpResponseCode > 0) {
-            Serial.print("Dados enviados com sucesso, código de resposta: ");
-            Serial.println(httpResponseCode);
-        } else {
-            Serial.print("Erro ao enviar dados, código de erro: ");
-            Serial.println(httpResponseCode);
+        if (httpResponseCode > 0)
+        {
+            logMessage("Firebase", "Dados enviados com sucesso, código de resposta: " + String(httpResponseCode));
+        }
+        else
+        {
+            logMessage("Firebase", "Erro ao enviar dados, código de erro: " + String(httpResponseCode));
         }
 
-        http.end();  // Finaliza a conexão HTTP
-    } else {
-        Serial.println("Erro: Não conectado ao WiFi");
+        http.end(); // Finaliza a conexão HTTP
     }
+    else
+    {
+        logMessage("Firebase", "Não conectado ao WiFi");
+    }
+}
+
+void updateDatabase()
+{
+
+    logMessage("Firebase", "Updating...");
+
+    String timestamp = now();
+    float poolTemperature = getPoolTemperature();
+    float roofTemperature = getRoofTemperature();
+    int stateMotor = getMotorState();
+
+    updateHistory(stateMotor, poolTemperature, roofTemperature, timestamp);
 }

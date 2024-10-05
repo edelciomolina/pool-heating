@@ -1,4 +1,10 @@
 #include "html.h"
+#include "log.h"
+
+void setupHtml()
+{
+    logMessage("HTML", "Starting...");
+}
 
 String getControlPage()
 {
