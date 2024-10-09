@@ -1,32 +1,32 @@
-#include "firebase.h"
-#include "controller.h"
-#include "ds18b20.h"
-#include "wifi_manager.h"
+// #include "firebase.h"
 #include "log.h"
-#include "html.h"
-#include "web_server.h"
+#include "controller.h"
+// #include "ds18b20.h"
+// #include "wifi_manager.h"
+// #include "html.h"
+// #include "web_server.h"
 
 void setup()
 {
-
     setupLog();
-    setupDS18B20();
     setupController();
-    setupFirebase();
-    setupWiFi();
-    setupHtml();
-    setupWebServer();
+    // setupDS18B20();
+    // setupFirebase();
+    // setupWiFi();
+    // setupHtml();
+    // setupWebServer();
 
-    connectToWiFi();
+    // connectToWiFi();
 }
 
 void loop()
 {
 
-    checkInternetConnection();
-    checkPushMotor();
-    checkTemperature();
-    updateDatabase();
+    // checkInternetConnection();
+    // checkPushMotor();
+    // checkTemperature();
+    // updateDatabase();
 
-    delay(5000);
+    test();
+    delay(1000);
 }

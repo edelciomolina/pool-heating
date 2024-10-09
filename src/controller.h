@@ -2,6 +2,7 @@
 #define controller_H
 #include <Arduino.h>
 
+void test();
 void setupController();
 void motor(int state);
 void ledInternet(int state);

@@ -5,11 +5,13 @@
 - Ctrl + Shift + P e escolha `Wokwi: Start Simulator`
 - O Wokwi com o simulador vai executar com a versão recém compilada
 
-## Como depurar
+## Como depurar pelo Wokwi
+- Remova o cabo USB do ESP32
 - Ctrl + Shift + P e escolha `Wokwi: Start Simulator and Wait for Debugger`
 - O Wokwi com o simulador vai ficar em pausa (botão amarelo)
-- Selecione `PIO Debug` e F5 para executar o projeto   
+- Ctrl + Shift + D, selecione `PIO Debug` e F5 para executar o projeto   
 - Utilize breakpoints para depurar o código.
+- Pressione o botão amarelo no simulador para continuar a execução
 > Tudo funciona meio lento enquanto em debugging, é normal.
 > Mantenha o Wokwi Simulator sempre visivel
 
