@@ -1,5 +1,10 @@
 #include "controller.h"
+#include "wifi_manager.h"
+#include "firebase.h"
+#include "ds18b20.h"
+#include "utils.h"
 #include "log.h"
+#include "test.h"
 
 #define pinLedMotor 26
 #define pinLedInternet 27
@@ -7,6 +12,12 @@
 
 #define pinPushMotor 25
 #define pinRelayMotor 21
+
+bool internet_on = false;
+bool motor_force_on = false;
+bool pulling_water = false;
+bool pool_temperature = -125;
+bool roof_temperature = -125;
 
 void setupController()
 {
@@ -19,62 +30,36 @@ void setupController()
     pinMode(pinPushMotor, INPUT);
 }
 
-void motor(int state)
+void checkInputs()
 {
-    digitalWrite(pinLedMotor, state);
-    digitalWrite(pinRelayMotor, state);
+    pool_temperature = poolTemperature();
+    roof_temperature = roofTemperature();
+    motor_force_on = toggleInput(pinPushMotor, motor_force_on);
+    internet_on = internetState();
+
+    String mesage = String(pulling_water) + " " +
+                    String(motor_force_on) + " " +
+                    String(internet_on);
+
+    logMessage("Controller", mesage);
 }
 
-void ledInternet(int state)
+void checkChanges()
 {
-    digitalWrite(pinLedInternet, state);
-}
+    digitalWrite(pinRelayMotor, motor_force_on || pulling_water);
+    digitalWrite(pinLedMotor, motor_force_on || pulling_water);
+    digitalWrite(pinLedInternet, internet_on);
 
-void checkPushMotor()
-{
-    int pushMotorState = digitalRead(pinPushMotor);
-    int relayMotorState = digitalRead(pinRelayMotor);
-
-    if (pushMotorState == HIGH)
+    if (!internet_on)
     {
-
-        motor(relayMotorState == HIGH ? LOW : HIGH);
-        delay(500);
-
-        while (digitalRead(pinPushMotor) == pushMotorState)
-        {
-        }
+        flashPin(pinLedInternet);
+        tryToReconnect();
     }
+
+    // updateHistory(motor_force_on, pulling_water, pool_temperature, roof_temperature);
 }
 
-int getMotorState()
+void runTests()
 {
-    return digitalRead(pinPushMotor);
-}
-
-void test()
-{
-
-    logMessage("Test", "Starting...");
-    delay(2000);
-
-    logMessage("Test", "BuiltIn Led...");
-    digitalWrite(pinLedBuiltIn, HIGH);
-    delay(2000);
-    digitalWrite(pinLedBuiltIn, LOW);
-
-    logMessage("Test", "Internet Led...");
-    digitalWrite(pinLedInternet, HIGH);
-    delay(2000);
-    digitalWrite(pinLedInternet, LOW);
-
-    logMessage("Test", "Motor Led...");
-    digitalWrite(pinLedMotor, HIGH);
-    delay(2000);
-    digitalWrite(pinLedMotor, LOW);
-
-    logMessage("Test", "Motor Relay...");
-    digitalWrite(pinRelayMotor, HIGH);
-    delay(2000);
-    digitalWrite(pinRelayMotor, LOW);
+    test(pinLedBuiltIn, pinLedInternet, pinLedMotor, pinRelayMotor);
 }

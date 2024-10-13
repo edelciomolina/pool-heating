@@ -7,8 +7,10 @@
 
 void setupWiFi();
 void connectToWiFi();
+void tryToReconnect();
 int checkInternetConnection();
-extern String ipAddress;
+bool internetState();
+extern String ipAddress; 
 String now();
 
 #endif // wifi_H

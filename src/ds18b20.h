@@ -7,7 +7,7 @@
 
 void setupDS18B20();
 void checkTemperature();
-float getPoolTemperature();
-float getRoofTemperature();
+float poolTemperature();
+float roofTemperature();
 
 #endif // DS18B20_H

@@ -26,49 +26,36 @@
       "left": -140.2,
       "attrs": { "color": "green" }
     },
-    {
-      "type": "wokwi-ntc-temperature-sensor",
-      "id": "ntc1",
-      "top": -131.8,
-      "left": -336.6,
-      "attrs": {}
-    },
-    {
-      "type": "wokwi-ntc-temperature-sensor",
-      "id": "ntc2",
-      "top": -16.6,
-      "left": -336.6,
-      "attrs": {}
-    },
-    { "type": "wokwi-relay-module", "id": "relay1", "top": 249.8, "left": -38.4, "attrs": {} },
-    { "type": "wokwi-junction", "id": "j1", "top": -100.8, "left": -312, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 240.2, "left": 201.6, "attrs": {} },
     {
       "type": "wokwi-resistor",
       "id": "r3",
       "top": -63.25,
-      "left": 9.6,
+      "left": 163.2,
       "attrs": { "value": "4700" }
     },
     {
       "type": "wokwi-resistor",
       "id": "r4",
-      "top": -82.45,
-      "left": 86.4,
+      "top": -92.05,
+      "left": 249.6,
       "attrs": { "value": "4700" }
+    },
+    { "type": "board-ds18b20", "id": "temp1", "top": -183.53, "left": -149.52, "attrs": {} },
+    { "type": "board-ds18b20", "id": "temp2", "top": -183.53, "left": -216.72, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r5",
+      "top": 205.55,
+      "left": -230.4,
+      "attrs": { "value": "1000" }
     },
     {
       "type": "wokwi-pushbutton",
       "id": "btn1",
-      "top": 102.2,
-      "left": -297.6,
+      "top": 246.2,
+      "left": -230.4,
       "attrs": { "color": "green" }
-    },
-    {
-      "type": "wokwi-resistor",
-      "id": "r5",
-      "top": 176.75,
-      "left": -297.6,
-      "attrs": { "value": "1000" }
     }
   ],
   "connections": [
@@ -80,24 +67,23 @@
     [ "esp:GND.2", "led1:C", "black", [ "v4.6", "h-91.4", "v-57.6" ] ],
     [ "esp:D26", "r1:2", "green", [ "h0" ] ],
     [ "r2:2", "esp:D27", "green", [ "v0" ] ],
-    [ "ntc1:GND", "esp:GND.2", "black", [ "h57.6", "v259.2", "h149" ] ],
-    [ "ntc2:GND", "esp:GND.2", "black", [ "h57.6", "v144", "h149" ] ],
-    [ "esp:3V3", "ntc1:VCC", "red", [ "h71.5", "v-254.5" ] ],
-    [ "ntc2:VCC", "esp:3V3", "red", [ "h105.6", "v-115.2", "h268.8", "v254.5" ] ],
-    [ "relay1:GND", "esp:GND.2", "black", [ "h-19.2", "v-125.2", "h62.6" ] ],
-    [ "ntc1:OUT", "r4:1", "yellow", [ "h0" ] ],
-    [ "r4:1", "esp:D22", "yellow", [ "v19.2", "h67.2", "v91.6" ] ],
-    [ "r4:2", "esp:3V3", "red", [ "v0", "h27.6", "v240" ] ],
-    [ "r3:2", "esp:3V3", "red", [ "v-38.4", "h104.4", "v259.2" ] ],
-    [ "r3:1", "esp:D23", "yellow", [ "v19.2", "h124.8", "v57.6" ] ],
-    [ "ntc2:OUT", "r3:1", "yellow", [ "h115.2", "v-86.5" ] ],
-    [ "esp:D21", "relay1:IN", "green", [ "h52.3", "v273.1", "h-211.2", "v-47.8" ] ],
-    [ "relay1:VCC", "esp:3V3", "red", [ "h-9.6", "v-48", "h182.4", "v-62.3" ] ],
-    [ "btn1:2.r", "btn1:1.r", "green", [ "h0" ] ],
-    [ "btn1:1.r", "esp:D25", "green", [ "v-38.4", "h57.8", "v-28.8", "h153.6", "v38.4" ] ],
-    [ "btn1:2.l", "r5:1", "black", [ "h-19.2", "v48.2" ] ],
-    [ "r5:2", "esp:GND.2", "black", [ "h94.8", "v-28.8", "h149" ] ],
-    [ "btn1:1.l", "esp:3V3", "red", [ "h-38.4", "v105.6", "h470.4", "v-62.3" ] ]
+    [ "r4:1", "esp:D22", "yellow", [ "v57.6", "h-76.8", "v62.8" ] ],
+    [ "r3:1", "esp:D23", "yellow", [ "v38.4", "h96", "v43.2" ] ],
+    [ "esp:D21", "relay1:IN", "green", [ "h71.5", "v215.7" ] ],
+    [ "relay1:VCC", "esp:3V3", "red", [ "h-67.2", "v-100.7" ] ],
+    [ "temp1:GND", "esp:GND.2", "black", [ "v288", "h149" ] ],
+    [ "temp1:VCC", "esp:3V3", "red", [ "v28.8", "h451.2", "v264.1" ] ],
+    [ "temp1:DQ", "r4:1", "yellow", [ "v0" ] ],
+    [ "temp2:VCC", "esp:3V3", "red", [ "v28.8", "h518.4", "v264.1" ] ],
+    [ "temp2:GND", "esp:GND.2", "black", [ "v288", "h216.2" ] ],
+    [ "temp2:DQ", "r3:1", "yellow", [ "v0" ] ],
+    [ "r3:2", "esp:3V3", "red", [ "h104.4", "v216.1" ] ],
+    [ "r4:2", "esp:3V3", "red", [ "h18", "v244.9" ] ],
+    [ "btn1:1.l", "r5:1", "green", [ "h0" ] ],
+    [ "esp:D25", "r5:1", "green", [ "h-24.2", "v-52.9", "h-211.2", "v172.8" ] ],
+    [ "r5:2", "esp:GND.2", "green", [ "h66", "v-57.6", "h110.6" ] ],
+    [ "btn1:2.l", "esp:3V3", "red", [ "v29", "h364.8", "v-148.7" ] ],
+    [ "relay1:GND", "esp:GND.1", "black", [ "h-48", "v-120.2" ] ]
   ],
   "dependencies": {}
 }

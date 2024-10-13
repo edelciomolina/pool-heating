@@ -2,11 +2,9 @@
 #define controller_H
 #include <Arduino.h>
 
-void test();
+void runTests();
 void setupController();
-void motor(int state);
-void ledInternet(int state);
-void checkPushMotor();
-int getMotorState(); 
+void checkInputs();
+void checkChanges();
 
 #endif // controller_H

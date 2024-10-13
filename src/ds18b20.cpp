@@ -19,34 +19,14 @@ void setupDS18B20()
     roofSensor.begin();
 }
 
-float getPoolTemperature()
+float poolTemperature()
 {
     poolSensor.requestTemperatures();
     return poolSensor.getTempCByIndex(0);
 }
 
-float getRoofTemperature()
+float roofTemperature()
 {
     roofSensor.requestTemperatures();
     return roofSensor.getTempCByIndex(0);
-}
-
-void checkTemperature()
-{
-
-    float poolTemperature = getPoolTemperature();
-    float roofTemperature = getRoofTemperature();
-
-    logMessage("POOL", String(poolTemperature));
-    logMessage("ROOF", String(roofTemperature));
-
-    // Controle do motor com base na temperatura
-    if (roofTemperature > 30.0 || poolTemperature > 30.0)
-    {
-        motor(HIGH);
-    }
-    else
-    {
-        motor(LOW);
-    }
 }

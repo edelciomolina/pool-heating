@@ -2,7 +2,6 @@
 
 void setupLog()
 {
-    
     logMessage("Log", "Starting...");
     Serial.begin(115200);
 }
@@ -28,5 +27,5 @@ void logValue(const String &label, float value)
     Serial.print("[");
     Serial.print(label);
     Serial.print("] ");
-    Serial.println(value, 2);  
+    Serial.println(value, 2);
 }

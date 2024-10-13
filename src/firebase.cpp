@@ -12,7 +12,7 @@ void setupFirebase()
     logMessage("Firebase", "Starting...");
 }
 
-void updateHistory(int stateMotor, float poolTemperature, float roofTemperature, const String &timestamp)
+void updateHistory(bool force_motor, bool pulling_water, float pool_temperature, float roof_temperature)
 {
     if (checkInternetConnection() == WL_CONNECTED)
     {
@@ -21,10 +21,10 @@ void updateHistory(int stateMotor, float poolTemperature, float roofTemperature,
 
         // Preparar os dados JSON
         String jsonData = "{";
-        jsonData += "\"timestamp\": \"" + timestamp + "\",";
-        jsonData += "\"motor\": " + String(stateMotor) + ",";
-        jsonData += "\"pool\": " + String(poolTemperature) + ",";
-        jsonData += "\"roof\": " + String(roofTemperature);
+        jsonData += "\"timestamp\": \"" + now() + "\",";
+        jsonData += "\"motor\": " + String(pulling_water) + ",";
+        jsonData += "\"pool\": " + String(pool_temperature) + ",";
+        jsonData += "\"roof\": " + String(roof_temperature);
         jsonData += "}";
 
         // Configura a conexão HTTP e envia a requisição POST
@@ -48,17 +48,4 @@ void updateHistory(int stateMotor, float poolTemperature, float roofTemperature,
     {
         logMessage("Firebase", "Não conectado ao WiFi");
     }
-}
-
-void updateDatabase()
-{
-
-    logMessage("Firebase", "Updating...");
-
-    String timestamp = now();
-    float poolTemperature = getPoolTemperature();
-    float roofTemperature = getRoofTemperature();
-    int stateMotor = getMotorState();
-
-    updateHistory(stateMotor, poolTemperature, roofTemperature, timestamp);
 }
