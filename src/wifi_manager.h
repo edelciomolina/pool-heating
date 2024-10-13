@@ -6,8 +6,7 @@
 #include <NTPClient.h>
 
 void setupWiFi();
-void connectToWiFi();
-void tryToReconnect();
+void connectToWiFi(void *parameter);
 int checkInternetConnection();
 bool internetState();
 extern String ipAddress; 

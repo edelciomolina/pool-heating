@@ -7,18 +7,28 @@ const char *ssid = "Molina_Sala";
 const char *password = "erm55555";
 String ipAddress = "127.0.0.1";
 
-WiFiClient client;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", -3 * 3600);
 
 void setupWiFi()
 {
     logMessage("WiFi", "Starting...");
+
+    connectToWiFi(NULL);
+
+    // xTaskCreate(
+    //     connectToWiFi,   // Função que será chamada
+    //     "connectToWiFi", // Nome da task (para fins de debug)
+    //     10000,           // Tamanho da stack (em bytes)
+    //     NULL,            // Parâmetro para a função (não usado aqui)
+    //     1,               // Prioridade da task (1 é a prioridade normal)
+    //     NULL             // Handle da task (não usado aqui)
+    // );
 }
 
-void connectToWiFi()
+void connectToWiFi(void *parameter)
 {
- 
+
     if (testMode)
     {
         logMessage("WiFi", "Conectando em Wokwi-GUEST...");
@@ -30,72 +40,41 @@ void connectToWiFi()
         WiFi.begin(ssid, password, 0); // Canal 0
     }
 
-    delay(1000);
-
-    if (WiFi.status() == WL_CONNECTED)
+    while (WiFi.status() != WL_CONNECTED)
     {
-        ipAddress = WiFi.localIP().toString();
-        logMessage("WiFi", "Conectado a rede WiFi!");
-        logMessage("WiFi", "Endereço IP: " + ipAddress);
+        delay(500);
     }
-    else
-    {
-        logMessage("WiFi", "Falha na conexão com o Modem WiFi!");
-        logMessage("WiFi", "Tentando reconectar...");
-        connectToWiFi();
-    }
-}
 
-void tryToReconnect()
-{
+    ipAddress = WiFi.localIP().toString();
+    logMessage("WiFi", "Conectado a rede WiFi!");
+    logMessage("WiFi", "Endereço IP: " + ipAddress);
 
-    if (checkInternetConnection() == WL_CONNECTED)
-    {
-        logMessage("WiFi", "Conectado a internet!");
+    logMessage("WiFi", "Verificando acesso a Internet...");
+    checkInternetConnection();
 
-        timeClient.begin();
-        timeClient.update();
-        logMessage("WiFi", "NTP conectado e atualizado!");
-    }
-    else
-    {
-        connectToWiFi();
-    }
 }
 
 int checkInternetConnection()
 {
-    logMessage("WiFi", "Verificando conexão com a internet...");
-    if (WiFi.status() == WL_CONNECTED)
+
+    timeClient.begin();
+    timeClient.update();
+    internet_connected = timeClient.getEpochTime() != 0;
+
+    if (internet_connected)
     {
-        // Tenta conectar ao servidor 8.8.8.8 (Google DNS) na porta 80
-        if (client.connect("8.8.8.8", 80))
-        {
-
-            logMessage("WiFi", "Ping 8.8.8.8 OK!");
-
-            internet_connected = true;
-            client.stop();
-        }
-        else
-        {
-
-            logMessage("WiFi", "Ping 8.8.8.8 FAIL!");
-
-            internet_connected = false;
-        }
+        logMessage("WiFi", "Internet OK! " + now());
     }
     else
     {
-        internet_connected = false;
-        return 0;
+        logMessage("WiFi", "Internet  FAIL!");
     }
-    return WiFi.status();
+
+    return internet_connected;
 }
 
 String now()
 {
-
     timeClient.update();
     return timeClient.getFormattedTime();
 }

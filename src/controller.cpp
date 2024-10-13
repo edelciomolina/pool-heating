@@ -41,7 +41,6 @@ void checkInputs()
                     String(motor_force_on) + " " +
                     String(internet_on);
 
-    logMessage("Controller", mesage);
 }
 
 void checkChanges()
@@ -53,7 +52,6 @@ void checkChanges()
     if (!internet_on)
     {
         flashPin(pinLedInternet);
-        tryToReconnect();
     }
 
     // updateHistory(motor_force_on, pulling_water, pool_temperature, roof_temperature);
