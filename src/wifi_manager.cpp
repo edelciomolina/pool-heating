@@ -1,33 +1,41 @@
 #include "wifi_manager.h"
 #include "log.h"
 
+bool internet_connecting = false;
 bool internet_connected = false;
 bool testMode = true;
 const char *ssid = "Molina_Sala";
 const char *password = "erm55555";
 String ipAddress = "127.0.0.1";
 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", -3 * 3600);
-
 void setupWiFi()
 {
     logMessage("WiFi", "Starting...");
-
-    connectToWiFi(NULL);
-
-    // xTaskCreate(
-    //     connectToWiFi,   // Função que será chamada
-    //     "connectToWiFi", // Nome da task (para fins de debug)
-    //     10000,           // Tamanho da stack (em bytes)
-    //     NULL,            // Parâmetro para a função (não usado aqui)
-    //     1,               // Prioridade da task (1 é a prioridade normal)
-    //     NULL             // Handle da task (não usado aqui)
-    // );
+    connectToWiFi();
+    setupTimezone();
 }
 
-void connectToWiFi(void *parameter)
+void setupTimezone()
 {
+    if (checkInternetConnection())
+    {
+        logMessage("WiFi", "Configurando horário NTP...");
+        Timezone myTZ;
+        if (!myTZ.setLocation(F("America/Sao_Paulo")))
+        {
+            myTZ.setLocation();
+        }
+        waitForSync();
+        logMessage("WiFi", myTZ.dateTime());
+    }
+}
+
+void connectToWiFi()
+{
+    if (internet_connecting)
+        return;
+
+    internet_connecting = true;
 
     if (testMode)
     {
@@ -50,33 +58,22 @@ void connectToWiFi(void *parameter)
     logMessage("WiFi", "Endereço IP: " + ipAddress);
 
     logMessage("WiFi", "Verificando acesso a Internet...");
-    checkInternetConnection();
-
-}
-
-int checkInternetConnection()
-{
-
-    timeClient.begin();
-    timeClient.update();
-    internet_connected = timeClient.getEpochTime() != 0;
-
-    if (internet_connected)
+    if (checkInternetConnection())
     {
-        logMessage("WiFi", "Internet OK! " + now());
+        logMessage("WiFi", "Internet OK!");
     }
     else
     {
         logMessage("WiFi", "Internet  FAIL!");
     }
 
-    return internet_connected;
+    internet_connecting = true;
 }
 
-String now()
+bool checkInternetConnection()
 {
-    timeClient.update();
-    return timeClient.getFormattedTime();
+    internet_connected = true; // TODO Resolver isso!!!
+    return internet_connected;
 }
 
 bool internetState()

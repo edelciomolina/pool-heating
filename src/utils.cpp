@@ -1,5 +1,7 @@
 #include "utils.h"
 
+std::map<int, unsigned long> lastExecutionMap;
+
 bool toggleInput(int inputPin, bool varState, int delayTime)
 {
     int pushMotorState = digitalRead(inputPin);
@@ -28,4 +30,17 @@ void flashPin(int outputPin, int times, int delayTime, int waitForContinueTime)
         delay(delayTime);
     }
     delay(waitForContinueTime);
+}
+
+bool checkMillis(unsigned long &lastMillis, unsigned long interval)
+{
+    unsigned long currentMillis = millis();
+ 
+    if (currentMillis - lastMillis >= interval || lastMillis == 0)
+    {
+        lastMillis = currentMillis;
+        return true;
+    }
+
+    return false;
 }

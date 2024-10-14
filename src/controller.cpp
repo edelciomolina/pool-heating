@@ -13,21 +13,22 @@
 #define pinPushMotor 25
 #define pinRelayMotor 21
 
+unsigned long lastHistory = 0;
+
 bool internet_on = false;
 bool motor_force_on = false;
 bool pulling_water = false;
-bool pool_temperature = -125;
-bool roof_temperature = -125;
+float pool_temperature = -125;
+float roof_temperature = -125;
 
 void setupController()
 {
-
-    logMessage("Controller", "Starting...");
     pinMode(pinLedInternet, OUTPUT);
     pinMode(pinLedBuiltIn, OUTPUT);
     pinMode(pinLedMotor, OUTPUT);
     pinMode(pinRelayMotor, OUTPUT);
     pinMode(pinPushMotor, INPUT);
+
 }
 
 void checkInputs()
@@ -36,14 +37,9 @@ void checkInputs()
     roof_temperature = roofTemperature();
     motor_force_on = toggleInput(pinPushMotor, motor_force_on);
     internet_on = internetState();
-
-    String mesage = String(pulling_water) + " " +
-                    String(motor_force_on) + " " +
-                    String(internet_on);
-
 }
 
-void checkChanges()
+void checkOutputs()
 {
     digitalWrite(pinRelayMotor, motor_force_on || pulling_water);
     digitalWrite(pinLedMotor, motor_force_on || pulling_water);
@@ -53,8 +49,18 @@ void checkChanges()
     {
         flashPin(pinLedInternet);
     }
+}
 
-    // updateHistory(motor_force_on, pulling_water, pool_temperature, roof_temperature);
+void checkDatabase()
+{
+    if (checkMillis(lastHistory, 10000))
+    {
+
+        Timezone myTZ;
+        myTZ.setLocation(F("America/Sao_Paulo"));
+        waitForSync();
+        updateHistory(myTZ.tzTime(), motor_force_on, pulling_water, pool_temperature, roof_temperature);
+    }
 }
 
 void runTests()

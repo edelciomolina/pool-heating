@@ -4,12 +4,15 @@
 #include <wifi.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
+#include <ezTime.h>
 
-void setupWiFi();
-void connectToWiFi(void *parameter);
-int checkInternetConnection();
+void setupWiFi(); 
+void connectToWiFi();
+void setupTimezone();
+bool checkInternetConnection();
 bool internetState();
+ 
 extern String ipAddress; 
-String now();
+extern bool internet_connected; 
 
 #endif // wifi_H

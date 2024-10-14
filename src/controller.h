@@ -5,6 +5,7 @@
 void runTests();
 void setupController();
 void checkInputs();
-void checkChanges();
+void checkOutputs();
+void checkDatabase();
 
 #endif // controller_H

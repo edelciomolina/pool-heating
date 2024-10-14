@@ -3,6 +3,9 @@
 
 #include <Arduino.h> 
 
-const String FIREBASE_API_KEY = "........";
+#define FIREBASE_API_KEY "......"
+#define FIREBASE_USER_NAME "......"
+#define FIREBASE_USER_PASS "......"
+#define FIREBASE_URL "......"
 
 #endif // FIREBASE_CONFIG_H
