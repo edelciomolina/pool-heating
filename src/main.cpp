@@ -23,8 +23,9 @@ void loop()
 {
 
     checkInputs();
-    checkOutputs();
     checkDatabase();
+    checkPullingWater();
+    checkOutputs();
 
     Serial.print(".");
     delay(100); 

@@ -12,7 +12,9 @@ void setupTimezone();
 bool checkInternetConnection();
 bool internetState();
  
-extern String ipAddress; 
+extern String ip_address; 
 extern bool internet_connected; 
+extern bool test_mode; 
+extern Timezone myTZ;
 
 #endif // wifi_H

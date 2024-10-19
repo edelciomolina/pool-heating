@@ -3,14 +3,14 @@
 #include "controller.h"
 
 // Definindo as portas dos sensores
-#define ONE_WIRE_BUS_1 22
-#define ONE_WIRE_BUS_2 23
+#define ONE_WIRE_BUS_1 23
+#define ONE_WIRE_BUS_2 22
 
 OneWire oneWire1(ONE_WIRE_BUS_1);
 OneWire oneWire2(ONE_WIRE_BUS_2);
 
-DallasTemperature poolSensor(&oneWire1);
-DallasTemperature roofSensor(&oneWire2);
+DallasTemperature poolSensor(&oneWire2);
+DallasTemperature roofSensor(&oneWire1);
 
 void setupDS18B20()
 {
@@ -22,11 +22,13 @@ void setupDS18B20()
 float poolTemperature()
 {
     poolSensor.requestTemperatures();
-    return poolSensor.getTempCByIndex(0);
+    float pool_temperature = poolSensor.getTempCByIndex(0);
+    return pool_temperature;
 }
 
 float roofTemperature()
 {
     roofSensor.requestTemperatures();
-    return roofSensor.getTempCByIndex(0);
+    float roof_temperature = roofSensor.getTempCByIndex(0);
+    return roof_temperature;
 }

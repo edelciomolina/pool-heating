@@ -1,12 +1,13 @@
 #include "wifi_manager.h"
 #include "log.h"
 
+Timezone myTZ;
 bool internet_connecting = false;
 bool internet_connected = false;
-bool testMode = true;
+bool test_mode = false;
 const char *ssid = "Molina_Sala";
 const char *password = "erm55555";
-String ipAddress = "127.0.0.1";
+String ip_address = "127.0.0.1";
 
 void setupWiFi()
 {
@@ -20,11 +21,9 @@ void setupTimezone()
     if (checkInternetConnection())
     {
         logMessage("WiFi", "Configurando horário NTP...");
-        Timezone myTZ;
-        if (!myTZ.setLocation(F("America/Sao_Paulo")))
-        {
-            myTZ.setLocation();
-        }
+        myTZ.setLocation();
+        myTZ.setLocation(F("America/Sao_Paulo"));
+
         waitForSync();
         logMessage("WiFi", myTZ.dateTime());
     }
@@ -37,7 +36,7 @@ void connectToWiFi()
 
     internet_connecting = true;
 
-    if (testMode)
+    if (test_mode)
     {
         logMessage("WiFi", "Conectando em Wokwi-GUEST...");
         WiFi.begin("Wokwi-GUEST", "", 6); // Canal 6
@@ -53,9 +52,9 @@ void connectToWiFi()
         delay(500);
     }
 
-    ipAddress = WiFi.localIP().toString();
+    ip_address = WiFi.localIP().toString();
     logMessage("WiFi", "Conectado a rede WiFi!");
-    logMessage("WiFi", "Endereço IP: " + ipAddress);
+    logMessage("WiFi", "Endereço IP: " + ip_address);
 
     logMessage("WiFi", "Verificando acesso a Internet...");
     if (checkInternetConnection())

@@ -6,7 +6,6 @@
 #include "firebase_config.h"
 
 #define FIREBASE_DISABLE_DEBUG_PRINT
-#include <ctime>
 #include <addons/TokenHelper.h> // Don't move this include from here
 #include <addons/RTDBHelper.h>  // Don't move this include from here
 
@@ -34,7 +33,15 @@ void setupFirebase()
     fbDataObj.keepAlive(10, 10, 1);
 }
 
-void updateHistory(time_t timestamp, bool force_motor, bool pulling_water, float pool_temperature, float roof_temperature)
+void updateHistory(time_t timestamp,
+                   bool force_motor,              //
+                   bool pulling_water,            //
+                   float pool_temperature,        //
+                   float roof_temperature,        //
+                   time_t last_pulling_water_hit, //
+                   bool test_mode,                //
+                   String ip_address              //
+)
 {
     if (!checkInternetConnection())
     {
@@ -56,17 +63,12 @@ void updateHistory(time_t timestamp, bool force_motor, bool pulling_water, float
     json.set("temperature_pool", pool_temperature);
     json.set("temperature_roof", roof_temperature);
     json.set("pulling_water", pulling_water);
+    json.set("pulling_Water_last", timestampToDateTime(last_pulling_water_hit));
+    json.set("force_motor", force_motor);
+    json.set("test_mode", test_mode);
+    json.set("ip_address", ip_address);
 
     bool result = Firebase.push(fbDataObj, "/history", json);
     logMessage("Firebase", String(result ? "History registrado!" : "Erro ao registrar history!"));
     logSkipLine();
-
-}
-
-String timestampToDateTime(time_t timestamp) {
-    struct tm * timeinfo;
-    char buffer[20]; 
-    timeinfo = std::localtime(&timestamp); 
-    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo); 
-    return String(buffer);
 }

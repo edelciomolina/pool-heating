@@ -13,13 +13,28 @@
 #define pinPushMotor 25
 #define pinRelayMotor 21
 
-unsigned long lastHistory = 0;
+#define TIME_TO_START "8:00"
+#define TIME_TO_END "17:30"
+#define PULL_WATER_CYCLE_CHECKER_MINUTES 30
+#define PULL_WATER_CYCLE_TURNOFF_MINUTES 3
+#define DATABASE_CYCLE_SECONDS 15
+
+bool ignorePullingWatter = true;
+unsigned long lastPullingWatterCycle = 0;
+unsigned long lastPullingWatterTurnOff = 0;
 
 bool internet_on = false;
 bool motor_force_on = false;
 bool pulling_water = false;
 float pool_temperature = -125;
 float roof_temperature = -125;
+unsigned long lastDatabaseHistory = 0;
+
+bool isOnTime()
+{
+    String timeNow = getTimeOfDay(myTZ.tzTime());
+    return isTimeEarlier(TIME_TO_START, timeNow) && isTimeEarlier(timeNow, TIME_TO_END);
+}
 
 void setupController()
 {
@@ -28,7 +43,6 @@ void setupController()
     pinMode(pinLedMotor, OUTPUT);
     pinMode(pinRelayMotor, OUTPUT);
     pinMode(pinPushMotor, INPUT);
-
 }
 
 void checkInputs()
@@ -49,17 +63,75 @@ void checkOutputs()
     {
         flashPin(pinLedInternet);
     }
+
+    if (!isOnTime())
+    {
+        flashPin(pinLedInternet);
+    }
+}
+
+void checkPullingWater()
+{
+
+    if (!isOnTime())
+    {
+        logMessage("Controller", "Ignorado. Não está na hora");
+        return;
+    }
+
+    if (motor_force_on)
+    {
+        logMessage("Controller", "Ignorado. Motor em modo FORCE");
+        return;
+    }
+
+    if (checkMillis(lastPullingWatterCycle, 1000 * 60 * PULL_WATER_CYCLE_CHECKER_MINUTES))
+    {
+        if (ignorePullingWatter)
+        {
+            logMessage("Controller", "Ignorado. Primeiro cíclo automático");
+            ignorePullingWatter = false;
+            return;
+        }
+
+        logMessage("Controller", "Ligando motor. CYCLE_CHECKER");
+        pulling_water = true;
+        lastPullingWatterTurnOff = millis();
+    }
+    if (checkMillis(lastPullingWatterTurnOff, 1000 * 60 * PULL_WATER_CYCLE_TURNOFF_MINUTES))
+    {
+
+        logMessage("Controller", "Desligando. CYCLE_TURNOFF");
+        pulling_water = false;
+    }
 }
 
 void checkDatabase()
 {
-    if (checkMillis(lastHistory, 10000))
+
+    if (!isOnTime())
+    {
+        logMessage("Controller", "Ignorado. Não está na hora");
+        return;
+    }
+
+    if (checkMillis(lastDatabaseHistory, 1000 * DATABASE_CYCLE_SECONDS))
     {
 
-        Timezone myTZ;
-        myTZ.setLocation(F("America/Sao_Paulo"));
-        waitForSync();
-        updateHistory(myTZ.tzTime(), motor_force_on, pulling_water, pool_temperature, roof_temperature);
+        unsigned long currentMillis = millis();
+        unsigned long secondsPassed = (currentMillis - lastPullingWatterCycle) / 1000; // Convertendo de milissegundos para segundos
+        time_t currentTime = myTZ.tzTime();
+        time_t lastPullingWaterHit = currentTime - secondsPassed;
+
+        updateHistory(myTZ.tzTime(),
+                      motor_force_on,      //
+                      pulling_water,       //
+                      pool_temperature,    //
+                      roof_temperature,    //
+                      lastPullingWaterHit, //
+                      test_mode,           //
+                      ip_address           //
+        );
     }
 }
 

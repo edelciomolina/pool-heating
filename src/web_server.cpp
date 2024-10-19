@@ -67,5 +67,5 @@ void startWebServer()
 
     server.onNotFound(notFound);
     server.begin();
-    logMessage("WebServer", "HTTP server started (http://" + ipAddress + ":8180)");
+    logMessage("WebServer", "HTTP server started (http://" + ip_address + ":8180)");
 }

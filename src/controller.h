@@ -7,5 +7,6 @@ void setupController();
 void checkInputs();
 void checkOutputs();
 void checkDatabase();
+void checkPullingWater();
 
 #endif // controller_H
