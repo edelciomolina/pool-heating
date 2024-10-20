@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Temperature Chart with Zoom and Pan</title>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    </head>
+    <body>
+        <div id="chartContainer" style="height: 370px; width: 100%"></div>
+
+        <script>
+            // Carregar o arquivo JSON local
+            fetch('data.json')
+                .then((response) => response.json())
+                .then((data) => {
+                    // Extração dos dados para o gráfico
+                    const history = data.history;
+                    const temperaturePoolData = [];
+                    const temperatureRoofData = [];
+
+                    // Iterar sobre as entradas de 'history'
+                    for (const key in history) {
+                        if (history.hasOwnProperty(key)) {
+                            const entry = history[key];
+                            const datetime = new Date(entry.datetime);
+
+                            // Verifica se os valores de temperatura são válidos
+                            if (
+                                entry.temperature_pool !== -127 &&
+                                entry.temperature_roof !== -127
+                            ) {
+                                temperaturePoolData.push({
+                                    x: datetime,
+                                    y: entry.temperature_pool,
+                                });
+                                temperatureRoofData.push({
+                                    x: datetime,
+                                    y: entry.temperature_roof,
+                                });
+                            }
+                        }
+                    }
+
+                    // Configurar e renderizar o gráfico com CanvasJS
+                    const chart = new CanvasJS.Chart('chartContainer', {
+                        animationEnabled: true,
+                        theme: 'light2',
+                        title: {
+                            text: 'Temperatures Over Time',
+                        },
+                        axisX: {
+                            title: 'Datetime',
+                            valueFormatString: 'DD MMM YYYY HH:mm:ss',
+                            crosshair: {
+                                enabled: true, // Habilita a linha de cruzamento no eixo X
+                                snapToDataPoint: true,
+                            },
+                        },
+                        axisY: {
+                            title: 'Temperature (°C)',
+                            includeZero: false,
+                            crosshair: {
+                                enabled: true, // Habilita a linha de cruzamento no eixo Y
+                            },
+                        },
+                        zoomEnabled: true, // Habilita o zoom
+                        panEnabled: true, // Habilita o pan (arrastar o gráfico)
+                        data: [
+                            {
+                                type: 'line',
+                                name: 'Pool Temperature',
+                                showInLegend: true,
+                                xValueFormatString: 'DD MMM YYYY HH:mm:ss',
+                                yValueFormatString: '#,##0.##°C',
+                                dataPoints: temperaturePoolData,
+                            },
+                            {
+                                type: 'line',
+                                name: 'Roof Temperature',
+                                showInLegend: true,
+                                xValueFormatString: 'DD MMM YYYY HH:mm:ss',
+                                yValueFormatString: '#,##0.##°C',
+                                dataPoints: temperatureRoofData,
+                            },
+                        ],
+                    });
+
+                    chart.render();
+                })
+                .catch((error) =>
+                    console.error('Erro ao carregar o arquivo JSON:', error),
+                );
+        </script>
+    </body>
+</html>
