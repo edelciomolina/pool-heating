@@ -4,6 +4,7 @@
 
 void runTests();
 void setupController();
+void checkInternet();
 void checkInputs();
 void checkOutputs();
 void checkDatabase();

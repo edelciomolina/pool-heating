@@ -20,6 +20,7 @@
 #define DATABASE_CYCLE_SECONDS 15
 
 bool ignorePullingWatter = true;
+unsigned long lastInternetCheck = 0;
 unsigned long lastPullingWatterCycle = 0;
 unsigned long lastPullingWatterTurnOff = 0;
 
@@ -43,6 +44,28 @@ void setupController()
     pinMode(pinLedMotor, OUTPUT);
     pinMode(pinRelayMotor, OUTPUT);
     pinMode(pinPushMotor, INPUT);
+}
+
+void checkInternet()
+{
+
+    if (checkMillis(lastInternetCheck, 1000 * 10))
+    {
+
+        logMessage("Controller", "Verificando conexão com internet...");
+
+        if (!internetState())
+        {
+            logMessageFail();
+            // xTaskCreate(connectToWiFi, "connectToWiFi", 30000, NULL, 1, NULL);
+            //xTaskCreatePinnedToCore(connectToWiFi, "connectToWiFi", 8192, NULL, 1, NULL, 1);
+            connectToWiFi();
+        }
+        else
+        {
+            logMessageSuccess();
+        }
+    }
 }
 
 void checkInputs()
@@ -75,7 +98,6 @@ void checkPullingWater()
 
     if (!isOnTime())
     {
-        logMessage("Controller", "Ignorado. Não está na hora");
         return;
     }
 
@@ -111,7 +133,6 @@ void checkDatabase()
 
     if (!isOnTime())
     {
-        logMessage("Controller", "Ignorado. Não está na hora");
         return;
     }
 

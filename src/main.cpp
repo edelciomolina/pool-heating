@@ -22,6 +22,7 @@ void setup()
 void loop()
 {
 
+    checkInternet();
     checkInputs();
     checkDatabase();
     checkPullingWater();

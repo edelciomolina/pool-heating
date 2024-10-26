@@ -57,7 +57,13 @@ void updateHistory(time_t timestamp,
         logMessage("Firebase", "Autenticação OK!");
     }
 
-    logMessage("Firebase", "Registrando History " + String(timestamp) + " at " + timestampToDateTime(timestamp) + "...");
+    String regLogMessage = String("Registrando History ");
+    regLogMessage += String(timestamp);
+    regLogMessage += " at ";
+    regLogMessage += timestampToDateTime(timestamp);
+    regLogMessage += "...";
+    logMessage("Firebase", regLogMessage);
+
     FirebaseJson json;
     json.set("datetime", timestampToDateTime(timestamp));
     json.set("temperature_pool", pool_temperature);
