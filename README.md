@@ -1,5 +1,8 @@
 # Solar Pool Heating Controller
 
+## Como limpar a piscina
+https://chatgpt.com/share/67223bb9-54c8-8005-8bcc-a9559eb011ab
+
 ## Como compilar
 - Ctrl + Shift + P e escolha `PlatformIO: Build`
 - Ctrl + Shift + P e escolha `Wokwi: Start Simulator`
