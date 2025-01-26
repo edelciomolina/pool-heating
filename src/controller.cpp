@@ -54,7 +54,7 @@ void checkInternet()
     if (checkMillis(lastInternetCheck, 1000 * 10))
     {
 
-        logMessage("Controller", "Verificando conexão com internet...");
+        logMessage("Controller", "Internet...");
 
         if (!internetState())
         {
@@ -93,16 +93,14 @@ void checkOutputs()
 {
     digitalWrite(pinRelayMotor, motor_force_on || pulling_water);
     digitalWrite(pinLedMotor, motor_force_on || pulling_water);
-    digitalWrite(pinLedInternet, internet_on);
 
     if (!internet_on)
     {
         flashPin(pinLedInternet);
     }
-
-    if (!isOnTime())
+    else
     {
-        flashPin(pinLedInternet);
+        digitalWrite(pinLedInternet, internet_on);
     } 
 }
 
