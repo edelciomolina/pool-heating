@@ -6,7 +6,7 @@
 #include "controller.h"
 
 AsyncWebServer server(80);
-const char *PARAM_MESSAGE = "message";
+// const char *PARAM_MESSAGE = "message";
 
 void notFound(AsyncWebServerRequest *request)
 {
@@ -24,6 +24,7 @@ String createHtml()
 void setupWebServer()
 {
     logMessage("WebServer", "Starting...");
+    startWebServer();
 }
 
 void startWebServer()
@@ -31,38 +32,54 @@ void startWebServer()
     // setupLEDs();
 
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) { //
-        if (request->hasParam("toggle"))
-        {
-            AsyncWebParameter *led = request->getParam("toggle");
-            // toggleLED(led->value().toInt());
-        }
+        // if (request->hasParam("motor"))
+        // {
+        //      toggleMotor();
+        // }
+        // if (request->hasParam("toggle"))
+        // {
+        //     AsyncWebParameter *led = request->getParam("toggle");
+        //      toggleLED(led->value().toInt());
+        // }
         request->send(200, "text/html", createHtml());
     });
 
     server.on("/get", HTTP_GET, [](AsyncWebServerRequest *request) { //
-        String message;
-        if (request->hasParam(PARAM_MESSAGE))
-        {
-            message = request->getParam(PARAM_MESSAGE)->value();
-        }
-        else
-        {
-            message = "No message sent";
-        }
-        request->send(200, "text/plain", "Hello, GET: " + message);
+        // String message;
+        // if (request->hasParam(PARAM_MESSAGE))
+        // {
+        //     message = request->getParam(PARAM_MESSAGE)->value();
+        // }
+        // else
+        // {
+        //     message = "No message sent";
+        // }
+        // request->send(200, "text/plain", "Hello, GET: " + message);
     });
 
     server.on("/post", HTTP_POST, [](AsyncWebServerRequest *request) { //
-        String message;
-        if (request->hasParam(PARAM_MESSAGE, true))
+        String result = "";
+        String name = request->getParam("name", true)->value();
+        String value = request->getParam("value", true)->value();
+
+        if (name == "motor")
         {
-            message = request->getParam(PARAM_MESSAGE, true)->value();
+            if (value == "toggle")
+            {
+                result = toggleMotor();
+            }
         }
-        else
-        {
-            message = "No message sent";
-        }
-        request->send(200, "text/plain", "Hello, POST: " + message);
+
+        // Cria a string JSON manualmente
+        String response = "{";
+        response += "\"name\":\"" + name + "\",";
+        response += "\"value\":\"" + value + "\",";
+        response += "\"result\":\"" + result + "\"";
+        response += "}";
+
+        // Envia a resposta como JSON
+        request->send(200, "application/json", response);
+
     });
 
     server.onNotFound(notFound);

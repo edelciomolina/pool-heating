@@ -5,8 +5,8 @@
 #include "wifi_manager.h"
 #include "firebase.h"
 #include "utils.h"
-// #include "html.h"
-// #include "web_server.h"
+#include "html.h"
+#include "web_server.h"
 
 void setup()
 {
@@ -18,8 +18,8 @@ void setup()
 
     setupWiFi();
     setupFirebase();
-    // setupHtml();
-    // setupWebServer();
+    setupHtml();
+    setupWebServer();
 }
 
 void loop()
@@ -32,5 +32,5 @@ void loop()
     checkOutputs();
 
     Serial.print(".");
-    delay(100); 
+    delay(100);
 }

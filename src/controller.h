@@ -8,6 +8,6 @@ void checkInternet();
 void checkInputs();
 void checkOutputs();
 void checkDatabase();
-void checkPullingWater();
-
+void checkPullingWater(); 
+bool toggleMotor();
 #endif // controller_H

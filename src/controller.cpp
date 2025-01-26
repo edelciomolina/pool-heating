@@ -91,6 +91,12 @@ void checkInputs()
     internet_on = internetState();
 }
 
+bool toggleMotor()
+{
+    motor_force_on = !motor_force_on;
+    return motor_force_on;
+}
+
 void checkOutputs()
 {
     digitalWrite(pinRelayMotor, motor_force_on || pulling_water);

@@ -12,31 +12,25 @@ String getControlPage()
         <!DOCTYPE html>
         <html>
             <head>
-                <title>ESP32 Web Server Demo</title>
+                <title>POOL HEATING</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <style>
                     html { font-family: sans-serif; text-align: center; }
                     body { display: inline-flex; flex-direction: column; }
                     h1 { margin-bottom: 1.2em; } 
                     h2 { margin: 0; }
+                    button { height: 45px; }
                     div { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; grid-auto-flow: column; grid-gap: 1em; }
-                    .btn { background-color: #5B5; border: none; color: #fff; padding: 0.5em 1em; font-size: 2em; text-decoration: none }
-                    .btn.OFF { background-color: #333; }
                 </style>
             </head>
             <body>
-                <h1>ESP32 Web Server</h1>
-                <div>
-                    <h2>LED 1</h2>
-                    <a href="?toggle=1" class="btn LED1_TEXT">LED1_TEXT</a>
-                    <h2>LED 2</h2>
-                    <a href="?toggle=2" class="btn LED2_TEXT">LED2_TEXT</a>
-                    
-                    <button onclick="sendPostRequest();">Enviar POST</button>
+                <h1>POOL HEATING</h1>
+                <div>  
+                    <button onclick="sendPostRequest('motor', 'toggle');">MOTOR</button>
                 </div>
                 <script>
-                    function sendPostRequest() {
-                        var message = "Mensagem que você deseja enviar no POST";
+
+                    function sendPostRequest(name, value) { 
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", "/post", true);
                         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -45,8 +39,10 @@ String getControlPage()
                                 console.log("Resposta do servidor: " + xhr.responseText);
                             }
                         };
-                        xhr.send("message=" + message);
+                        // Envia os parâmetros name e value no formato x-www-form-urlencoded
+                        xhr.send("name=" + encodeURIComponent(name) + "&value=" + encodeURIComponent(value));
                     }
+
                 </script>
             </body>
         </html>
