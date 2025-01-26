@@ -11,7 +11,9 @@
                 "e:/_Projetos/pool-heating/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
-                "e:/_Projetos/pool-heating/.pio/libdeps/esp32/ezTime/src",
+                "e:/_Projetos/pool-heating/.pio/libdeps/esp32/RTClib/src",
+                "e:/_Projetos/pool-heating/.pio/libdeps/esp32/Adafruit BusIO",
+                "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src", 
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/EEPROM/src",
                 "e:/_Projetos/pool-heating/.pio/libdeps/esp32/Firebase ESP32 Client/src",
@@ -244,7 +246,6 @@
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/USB/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
                 "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 ""
             ],
             "browse": {
@@ -253,7 +254,9 @@
                     "e:/_Projetos/pool-heating/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
-                    "e:/_Projetos/pool-heating/.pio/libdeps/esp32/ezTime/src",
+                    "e:/_Projetos/pool-heating/.pio/libdeps/esp32/RTClib/src",
+                    "e:/_Projetos/pool-heating/.pio/libdeps/esp32/Adafruit BusIO",
+                    "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src", 
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/EEPROM/src",
                     "e:/_Projetos/pool-heating/.pio/libdeps/esp32/Firebase ESP32 Client/src",
@@ -486,7 +489,6 @@
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/USB/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
                     "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                    "C:/Users/edelc/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     ""
                 ]
             },

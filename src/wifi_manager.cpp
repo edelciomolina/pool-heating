@@ -1,8 +1,8 @@
 #include "wifi_manager.h"
+#include "ds3231.h"
 #include "log.h"
 #include "utils.h"
 
-Timezone myTZ;
 bool internet_connecting = false;
 bool internet_connected = false;
 bool test_mode = false;
@@ -22,12 +22,7 @@ void setupTimezone()
 {
     if (checkInternetConnection())
     {
-        logMessage("WiFi", "Configurando horário NTP...");
-        myTZ.setLocation();
-        myTZ.setLocation(F("America/Sao_Paulo"));
-
-        waitForSync();
-        logMessage("WiFi", myTZ.dateTime());
+        setupTime_DS3231();
     }
 }
 
@@ -38,7 +33,6 @@ void connectToWiFi(void *parameter)
 
 void connectToWiFi()
 {
-
     try
     {
 
@@ -65,34 +59,32 @@ void connectToWiFi()
         if (WiFi.status() != WL_CONNECTED)
         {
             logMessageFail();
-            internet_connecting = false;
-            return;
         }
         else
         {
+
             logMessageSuccess();
-        }
 
-        ip_address = WiFi.localIP().toString();
-        logMessage("WiFi", "Endereço IP: " + ip_address);
+            ip_address = WiFi.localIP().toString();
+            logMessage("WiFi", "Endereço IP: " + ip_address);
 
-        logMessage("WiFi", "Verificando acesso a Internet...");
-        if (checkInternetConnection())
-        {
-            logMessageSuccess();
+            logMessage("WiFi", "Verificando acesso a Internet...");
+            if (checkInternetConnection())
+            {
+                logMessageSuccess();
+                setupTimezone();
+            }
+            else
+            {
+                logMessageFail();
+            }
         }
-        else
-        {
-            logMessageFail();
-        }
-
-        setupTimezone();
     }
     catch (const std::exception &e)
     {
     }
 
-    internet_connecting = true;
+    internet_connecting = false;
 }
 
 bool checkInternetConnection()
@@ -104,103 +96,4 @@ bool checkInternetConnection()
 bool internetState()
 {
     return internet_connected;
-}
-
-String getHostFromURL(const String &url, String &protocol, String &path)
-{
-    String host = "";
-
-    // Detecta o protocolo (http ou https)
-    int index = url.indexOf(":");
-    if (index > 0)
-    {
-        protocol = url.substring(0, index); // Protocolo (http ou https)
-    }
-
-    // Remover o protocolo da URL
-    String tempUrl = url;
-    if (protocol == "http" || protocol == "https")
-    {
-        tempUrl = url.substring(index + 3); // Remove "http://" ou "https://"
-    }
-
-    // Separar o host e o caminho
-    int pathIndex = tempUrl.indexOf("/");
-    if (pathIndex > 0)
-    {
-        host = tempUrl.substring(0, pathIndex);
-        path = tempUrl.substring(pathIndex); // Captura o caminho
-    }
-    else
-    {
-        host = tempUrl;
-        path = "/";
-    }
-
-    return host;
-}
-
-String httpGET(const char *url)
-{
-
-    String payload = "";
-    String protocol = "";
-    String path = "";
-    HTTPClient http;
-
-    try
-    {
-
-        // Extrair host e protocolo da URL
-        String host = getHostFromURL(url, protocol, path);
-
-        if (WiFi.status() == WL_CONNECTED)
-        {
-            if (protocol == "http")
-            {
-                // Caso seja HTTP
-                http.begin(host + path); // Cria a conexão HTTP
-
-                int httpResponseCode = http.GET();
-                if (httpResponseCode > 0)
-                {
-                    payload = http.getString();
-                }
-
-                http.end();
-            }
-            else if (protocol == "https")
-            {
-                // Caso seja HTTPS
-                WiFiClientSecure client;
-                client.setInsecure(); // Ignora a validação SSL
-
-                if (client.connect(host.c_str(), 443))
-                {
-                    // Envia o pedido GET via HTTPS
-                    client.println("GET " + path + " HTTP/1.1");
-                    client.println("Host: " + host);
-                    client.println("Connection: close");
-                    client.println();
-
-                    // Lê a resposta
-                    while (client.connected() || client.available())
-                    {
-                        if (client.available())
-                        {
-                            payload += client.readString();
-                        }
-                    }
-
-                    client.stop(); // Finaliza a conexão
-                }
-            }
-        }
-    }
-    catch (const std::exception &e)
-    {
-        http.end();
-    }
-
-    return payload;
 }

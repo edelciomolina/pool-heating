@@ -2,6 +2,7 @@
 #include "wifi_manager.h"
 #include "firebase.h"
 #include "ds18b20.h"
+#include "ds3231.h"
 #include "utils.h"
 #include "log.h"
 #include "test.h"
@@ -35,7 +36,8 @@ unsigned long lastDatabaseHistory = 0;
 
 bool isOnTime()
 {
-    String timeNow = getTimeOfDay(myTZ.tzTime());
+    time_t myTZ = getTime_DS3231();
+    String timeNow = getTimeOfDay(myTZ);
     return isTimeEarlier(TIME_TO_START, timeNow) && isTimeEarlier(timeNow, TIME_TO_END);
 }
 
@@ -101,7 +103,7 @@ void checkOutputs()
     else
     {
         digitalWrite(pinLedInternet, internet_on);
-    } 
+    }  
 }
 
 void checkPullingWater()
@@ -149,13 +151,13 @@ void checkDatabase()
 
     if (checkMillis(lastDatabaseHistory, 1000 * DATABASE_CYCLE_SECONDS))
     {
-
+ 
         unsigned long currentMillis = millis();
         unsigned long secondsPassed = (currentMillis - lastPullingWatterCycle) / 1000; // Convertendo de milissegundos para segundos
-        time_t currentTime = myTZ.tzTime();
+        time_t currentTime = getTime_DS3231();
         time_t lastPullingWaterHit = currentTime - secondsPassed;
 
-        updateHistory(myTZ.tzTime(),
+        updateHistory(currentTime,
                       motor_force_on,      //
                       pulling_water,       //
                       pool_temperature,    //

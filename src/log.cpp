@@ -1,5 +1,6 @@
 #include "log.h"
 #include "utils.h"
+#include "ds3231.h"
 #include "wifi_manager.h"
 
 void setupLog()
@@ -16,7 +17,8 @@ void logSkipLine()
 
 void logMessage(const String &label, const String &message, const bool &skipLineAtEnd)
 {
-    String timeNow = getTimeOfDay(myTZ.tzTime());
+    //time_t myTZ = getTime_DS3231();
+    //String timeNow = getTimeOfDay(myTZ);
     if (!skipLineAtEnd)
     {
         Serial.println();
@@ -24,7 +26,7 @@ void logMessage(const String &label, const String &message, const bool &skipLine
 
     if(label.length() > 0)
     {
-        Serial.print(timeNow);
+       // Serial.print(timeNow);
         Serial.print(" [");
         Serial.print(label);
         Serial.print("] ");
@@ -40,12 +42,12 @@ void logMessage(const String &label, const String &message, const bool &skipLine
 
 void logMessageSuccess()
 {
-    logMessage("", " (OK)", true);
-}
+    logMessage("", " (✅ OK)", true);
+} 
 
 void logMessageFail()
 {
-    logMessage("", " (FAILED)", true);
+    logMessage("", " (🛑 FAILED)", true);
 }
 
 void logMessage(const String &message)
