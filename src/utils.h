@@ -11,5 +11,8 @@ String timestampToDateTime(time_t timestamp);
 time_t dateTimeToTimestamp(String datetime);
 String getTimeOfDay(time_t timestamp);
 bool isTimeEarlier(String time1, String time2);
+String httpGET(const char *serverName);
+String jsonGET(const char *url, const char *fieldName);
+bool isValidDateTime(String datetime);
 
 #endif // utils_H

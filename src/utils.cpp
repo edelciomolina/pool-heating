@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <HTTPClient.h>
 #include <ctime>
 
 std::map<int, unsigned long> lastExecutionMap;
@@ -101,4 +102,163 @@ bool isTimeEarlier(String time1, String time2)
     {
         return minute1 < minute2;
     }
+}
+
+String getHostFromURL(const String &url, String &protocol, String &path)
+{
+    String host = "";
+
+    // Detecta o protocolo (http ou https)
+    int index = url.indexOf(":");
+    if (index > 0)
+    {
+        protocol = url.substring(0, index); // Protocolo (http ou https)
+    }
+
+    // Remover o protocolo da URL
+    String tempUrl = url;
+    if (protocol == "http" || protocol == "https")
+    {
+        tempUrl = url.substring(index + 3); // Remove "http://" ou "https://"
+    }
+
+    // Separar o host e o caminho
+    int pathIndex = tempUrl.indexOf("/");
+    if (pathIndex > 0)
+    {
+        host = tempUrl.substring(0, pathIndex);
+        path = tempUrl.substring(pathIndex); // Captura o caminho
+    }
+    else
+    {
+        host = tempUrl;
+        path = "/";
+    }
+
+    return host;
+}
+
+String httpGET(const char *url)
+{
+
+    String payload = "";
+    String protocol = "";
+    String path = "";
+    HTTPClient http;
+
+    try
+    {
+
+        // Extrair host e protocolo da URL
+        String host = getHostFromURL(url, protocol, path);
+
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            if (protocol == "http")
+            {
+                // Caso seja HTTP
+                http.begin(host + path); // Cria a conexão HTTP
+
+                int httpResponseCode = http.GET();
+                if (httpResponseCode > 0)
+                {
+                    payload = http.getString();
+                }
+
+                http.end();
+            }
+            else if (protocol == "https")
+            {
+                // Caso seja HTTPS
+                WiFiClientSecure client;
+                client.setInsecure(); // Ignora a validação SSL
+
+                if (client.connect(host.c_str(), 443))
+                {
+                    // Envia o pedido GET via HTTPS
+                    client.println("GET " + path + " HTTP/1.1");
+                    client.println("Host: " + host);
+                    client.println("Connection: close");
+                    client.println();
+
+                    // Lê a resposta
+                    while (client.connected() || client.available())
+                    {
+                        if (client.available())
+                        {
+                            payload += client.readString();
+                        }
+                    }
+
+                    client.stop(); // Finaliza a conexão
+                }
+            }
+        }
+    }
+    catch (const std::exception &e)
+    {
+        http.end();
+    }
+
+    return payload;
+}
+
+String jsonGET(const char *url, const char *fieldName)
+{
+    // Obtém o JSON bruto da URL
+    String jsonResponse = httpGET(url);
+
+    // Verifica se a resposta está vazia
+    if (jsonResponse.length() == 0)
+    {
+        return "Erro: Resposta vazia ou erro de conexão";
+    }
+
+    // Constrói o padrão do campo a ser buscado
+    String fieldPattern = String("\"") + fieldName + "\":\"";
+
+    // Encontra a posição inicial do campo
+    int fieldStart = jsonResponse.indexOf(fieldPattern);
+    if (fieldStart == -1)
+    {
+        return "Erro: Campo não encontrado no JSON";
+    }
+
+    // Move o índice para o início do valor
+    fieldStart += fieldPattern.length();
+
+    // Encontra a posição final do valor (fechamento das aspas)
+    int fieldEnd = jsonResponse.indexOf("\"", fieldStart);
+    if (fieldEnd == -1)
+    {
+        return "Erro: Valor do campo está incompleto";
+    }
+
+    // Extrai e retorna o valor do campo
+    return jsonResponse.substring(fieldStart, fieldEnd);
+}
+
+bool isValidDateTime(String datetime)
+{
+
+    // Remove os milissegundos, se existirem (parte após o '.')
+    int dotIndex = datetime.indexOf('.');
+    if (dotIndex != -1)
+    {
+        datetime = datetime.substring(0, dotIndex);
+    }
+
+    // Verifica se o comprimento é exato (19 caracteres)
+    if (datetime.length() != 19)
+    {
+        return false;
+    }
+
+    // Verifica se existe o caractere 'T' na posição 10
+    if (datetime[10] != 'T')
+    {
+        return false;
+    }
+
+    return true; // Passou nas verificações
 }
