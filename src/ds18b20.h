@@ -5,8 +5,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-void setupDS18B20();
-void checkTemperature();
+void setupDS18B20(); 
 float poolTemperature();
 float roofTemperature();
 

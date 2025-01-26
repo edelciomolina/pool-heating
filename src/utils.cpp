@@ -36,8 +36,8 @@ void flashPin(int outputPin, int times, int delayTime, int waitForContinueTime)
 bool checkMillis(unsigned long &lastMillis, unsigned long interval)
 {
     unsigned long currentMillis = millis();
-
-    if (currentMillis - lastMillis >= interval || lastMillis == 0)
+    unsigned long securityMarginMs = 5000; // 5 segundos de segurança
+    if (currentMillis - lastMillis >= interval + securityMarginMs || lastMillis == 0)
     {
         lastMillis = currentMillis;
         return true;

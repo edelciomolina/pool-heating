@@ -15,14 +15,16 @@
 
 #define TIME_TO_START "8:00"
 #define TIME_TO_END "17:30"
-#define PULL_WATER_CYCLE_CHECKER_MINUTES 30
-#define PULL_WATER_CYCLE_TURNOFF_MINUTES 3
-#define DATABASE_CYCLE_SECONDS 15
+#define PULL_WATER_CYCLE_CHECKER_MINUTES 15   // 15 MINUTOS
+#define PULL_WATER_MANUAL_CHECKER_MINUTES 120 // 2 HORAS
+#define PULL_WATER_CYCLE_TURNOFF_MINUTES 2    // 2 MINUTOS
+#define DATABASE_CYCLE_SECONDS 300            // 5 MINUTOS
 
 bool ignorePullingWatter = true;
 unsigned long lastInternetCheck = 0;
 unsigned long lastPullingWatterCycle = 0;
 unsigned long lastPullingWatterTurnOff = 0;
+unsigned long lastManualPullingWatter = 0;
 
 bool internet_on = false;
 bool motor_force_on = false;
@@ -58,7 +60,7 @@ void checkInternet()
         {
             logMessageFail();
             // xTaskCreate(connectToWiFi, "connectToWiFi", 30000, NULL, 1, NULL);
-            //xTaskCreatePinnedToCore(connectToWiFi, "connectToWiFi", 8192, NULL, 1, NULL, 1);
+            // xTaskCreatePinnedToCore(connectToWiFi, "connectToWiFi", 8192, NULL, 1, NULL, 1);
             connectToWiFi();
         }
         else
@@ -70,6 +72,17 @@ void checkInternet()
 
 void checkInputs()
 {
+
+    if (checkMillis(lastManualPullingWatter, 1000 * 60 * PULL_WATER_MANUAL_CHECKER_MINUTES))
+    {
+        if (motor_force_on)
+        {
+            motor_force_on = false;
+            logMessage("Controller", "Motor em modo FORCE atingiu tempo máximo");
+            return;
+        }
+    }
+
     pool_temperature = poolTemperature();
     roof_temperature = roofTemperature();
     motor_force_on = toggleInput(pinPushMotor, motor_force_on);
@@ -90,7 +103,7 @@ void checkOutputs()
     if (!isOnTime())
     {
         flashPin(pinLedInternet);
-    }
+    } 
 }
 
 void checkPullingWater()
